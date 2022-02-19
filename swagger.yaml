@@ -1,0 +1,515 @@
+swagger: "2.0"
+info:
+  description: "RZD Project REST API Specification."
+  version: "2.0"
+  title: "RZD Project"
+  termsOfService: "https://github.com/kansof/rzd/blob/master/LICENSE"
+  contact:
+    email: "ivan@ianikin.ru"
+  license:
+    name: "MIT"
+    url: "https://github.com/kansof/rzd/blob/master/LICENSE"
+host: "ivan.anikin.su"
+basePath: "/api/v2"
+tags:
+- name: "Employees"
+  description: "Operations with employees"
+- name: "Posts"
+  description: "Operate with employees` posts"
+- name: "Schedule"
+  description: "Get schedule and stations info"
+- name: "Auth"
+  description: "Work with auth and tokens"
+schemes:
+- "https"
+paths:
+  /employees:
+    get:
+      tags:
+      - "Employees"
+      summary: "Get all employees"
+      description: "Get all employees"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "login"
+        description: "filter by employee's login"
+        required: false
+        type: "string"
+      - in: "query"
+        name: "post"
+        description: "filter by employee's post"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Employee"
+        "403":
+          description: "Wrong access token"
+    post:
+      tags:
+      - "Employees"
+      summary: "Add new employee"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "employee"
+        description: "Employee needs to be added to the company"
+        required: true
+        schema:
+          $ref: "#/definitions/Employee"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Employee"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+  /employees/{id}:
+    get:
+      tags:
+      - "Employees"
+      summary: "Get employee"
+      description: "Get employee by id"
+      consumes:
+      - "plain/text"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        type: "integer"
+        name: "id"
+        description: "Employee id"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Employee"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+    put:
+      tags:
+        - "Employees"
+      summary: "Edit existing employee"
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "employee"
+          description: "Edited employee with updated fields"
+          required: true
+          schema:
+            $ref: "#/definitions/Employee"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Employee"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+    delete:
+      tags:
+      - "Employees"
+      summary: "Delete existing employee by id"
+      description: ""
+      consumes:
+      - "plain/text"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        description: "Id of employee needs to be deleted"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+
+  /schedule/trains/{id}:
+    get:
+      tags:
+      - "Schedule"
+      summary: "Get train schedule by id"
+      description: ""
+      consumes:
+      - "plain/text"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        type: "integer"
+        name: "id"
+        description: "Train id"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ScheduleTrain"
+        "400":
+          description: "Invalid input"
+  /schedule/stations:
+    get:
+      tags:
+      - "Schedule"
+      summary: "Get stations schedule by id"
+      description: ""
+      consumes:
+      - "plain/text"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        type: "string"
+        name: "name"
+        description: "Station name"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ScheduleStation"
+        "400":
+          description: "Invalid input"
+  /stations/names:
+    get:
+      tags:
+      - "Schedule"
+      summary: "Get stations names list"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/String"
+        "400":
+          description: "Invalid input"
+  
+  /posts:
+    get:
+      tags:
+      - "Posts"
+      summary: "Get all posts"
+      description: "Get all posts"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Post"
+        "403":
+          description: "Wrong access token"
+    post:
+      tags:
+      - "Posts"
+      summary: "Add new post"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "post"
+        description: "Post needs to be added"
+        required: true
+        schema:
+          $ref: "#/definitions/Post"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Post"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+    put:
+      tags:
+      - "Posts"
+      summary: "Edit existing post"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "post"
+        description: "Edited post with updated fields"
+        required: true
+        schema:
+          $ref: "#/definitions/Post"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Post"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+  /posts/{id}: 
+    get:
+      tags:
+      - "Posts"
+      summary: "Get post"
+      description: "Get post by id"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        type: "integer"
+        name: "id"
+        description: "Post id"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Post"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+    delete:
+      tags:
+      - "Posts"
+      summary: "Delete existing post by id"
+      description: ""
+
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        description: "Id of post needs to be deleted"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Invalid input"
+        "403":
+          description: "Wrong access token"
+
+  /auth:
+    post:
+      tags:
+      - "Auth"
+      summary: "try to auth"
+      description: "authenticate with login password"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        type: "string"
+        name: "login"
+        description: "Users login"
+        required: true
+      - in: "query"
+        type: "string"
+        name: "password"
+        description: "Users password"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+              $ref: "#/definitions/Tokens"
+        "400":
+          description: "Bad credentials"
+  /auth/refresh:
+    post:
+      tags:
+      - "Auth"
+      summary: "Refresh tokens"
+      description: "Return new pair of tokens"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "refresh-token"
+        description: "refresh-token"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+              $ref: "#/definitions/Tokens"
+        "403":
+          description: "Expired refresh token"
+  /auth/access/check:
+    get:
+      tags:
+      - "Auth"
+      summary: "Check if access token expired"
+      description: ""
+      produces:
+      - "plain/text"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "access-token"
+        description: "access-token"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+              type: "boolean"
+        "403":
+          description: "Expired access token"
+  /auth/refresh/check:
+    get:
+      tags:
+      - "Auth"
+      summary: "Check if refresh token expired"
+      description: ""
+      produces:
+      - "plain/text"
+      parameters:
+      - in: "header"
+        type: "string"
+        name: "refresh-token"
+        description: "refresh-token"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          schema:
+              type: "boolean"
+        "403":
+          description: "Expired refresh token"
+
+securityDefinitions:
+  token_auth:
+    type: "oauth2"
+    authorizationUrl: "https://ivan.anikin.su/auth/login"
+    flow: "implicit"
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Employee:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int"
+      name:
+        type: "string"
+      birthdate:
+        type: "string"
+        format: "date"
+      sex:
+        type: "string"
+        format: "char"
+      bid:
+        type: "number"
+        format: "float"
+      salary:
+        type: "number"
+        format: "float"
+      hired:
+        type: "string"
+        format: "date"
+      train:
+        type: "integer"
+        format: "can be null"
+      post:
+        type: "integer"
+        format: "id"
+      premium:
+        type: "number"
+        format: "float"
+      login:
+        type: "string"
+      password:
+        type: "string"
+
+  ScheduleStation:
+    type: "object"
+    properties:
+      train:
+        type: "integer"
+        format: "int"
+      time:
+        type: "string"
+        format: "time"
+  ScheduleTrain:
+    type: "object"
+    properties:
+      station:
+        type: "string"
+      time:
+        type: "string"
+        format: "time"
+  Post:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int"
+      name:
+        type: "string"
+      salary:
+        type: "number"
+        format: "float"
+  Tokens:
+    type: "object"
+    properties:
+      access:
+        type: "string"
+      refresh:
+        type: "string"
+  String:
+    type: "object"
+    properties:
+      string:
+        type: "string"
